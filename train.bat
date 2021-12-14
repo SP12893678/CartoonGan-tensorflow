@@ -1,0 +1,1 @@
+python train.py  --batch_size 4 --pretrain_epochs 1 --content_lambda .4  --pretrain_learning_rate 1e-4 --g_adv_lambda 8. --generator_lr 4e-5 --discriminator_lr 1.5e-5 --style_lambda 25. --light --dataset_name test

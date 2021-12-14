@@ -79,7 +79,8 @@ class BasicShuffleUnitV2(Model):
                  norm_type="instance",
                  pad_type="constant",
                  **kwargs):
-        super(BasicShuffleUnitV2, self).__init__(name="BasicShuffleUnitV2")
+        # super(BasicShuffleUnitV2, self).__init__(name="BasicShuffleUnitV2")
+        super(BasicShuffleUnitV2, self).__init__()
         filters //= 2
         self.model = tf.keras.models.Sequential([
             Conv2D(filters, 1, use_bias=False),
