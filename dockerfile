@@ -1,49 +1,13 @@
-FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+FROM alpine/git:latest AS keras-contrib-builder
+WORKDIR /keras-contrib
 
-# set bash as current shell
-RUN chsh -s /bin/bash
-SHELL ["/bin/bash", "-c"]
+RUN git clone https://github.com/SP12893678/keras-contrib.git
 
-# install anaconda
-RUN apt-get update
-RUN apt-get install -y libegl1-mesa
-# RUN apt-get install -y libgl1-mesa-glx 
+FROM tensorflow/tensorflow:latest-gpu-py3
+COPY --from=keras-contrib-builder /keras-contrib/keras-contrib /keras-contrib
+RUN cd /keras-contrib && python convert_to_tf_keras.py && USE_TF_KERAS=1 python setup.py install
 
-RUN apt-get install -y libxrandr2 libxrandr2 
-RUN apt-get install -y libxss1 libxcursor1 libxcomposite1 libasound2 
-RUN apt-get install -y libxi6 libxtst6
-RUN apt-get install -y curl
-# RUN cd /tmp
-# RUN curl –O https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh ~/anaconda.sh \
+RUN pip install imageio
+RUN pip install tqdm
 
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN apt-get update
-
-RUN apt-get install -y wget && rm -rf /var/lib/apt/lists/*
-
-RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && mkdir /root/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh 
-RUN conda --version
-
-# set path to conda
-# ENV PATH /opt/conda/bin:$PATH
-
-# setup conda virtual environment
-COPY ./environment_linux_gpu.yml /tmp/environment_linux_gpu.yml
-RUN conda update conda \
-    && conda env create -n cartoongan -f /tmp/environment_linux_gpu.yml
-
-
-# RUN conda activate cartoongan
-# RUN echo "conda activate camera-seg" >> ~/.bashrc
-RUN echo "conda activate cartoongan" >> ~/.bashrc
-ENV PATH /opt/conda/envs/cartoongan/bin:$PATH
-ENV CONDA_DEFAULT_ENV $cartoongan
-
-# RUN sha256sum Anaconda3-2021.11-Linux-x86_64.sh
-# RUN bash Anaconda3-2021.11-Linux-x86_64.sh
-CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+ENTRYPOINT ["tail","-f","/dev/null"]

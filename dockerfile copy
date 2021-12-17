@@ -1,0 +1,10 @@
+FROM continuumio/miniconda3:latest AS miniconda
+
+FROM nvidia/cuda:11.0.3-cudnn8-runtime-ubuntu18.04
+COPY --from=miniconda /opt/conda /opt/conda
+
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+
+SHELL ["/bin/bash", "-c"]
+
+ENTRYPOINT ["tail","-f","/dev/null"]
