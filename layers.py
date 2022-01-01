@@ -3,6 +3,7 @@ import tensorflow.keras.backend as K
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Layer, InputSpec, DepthwiseConv2D
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Add
+BatchNormalization._USE_V2_BEHAVIOR = False
 from tensorflow.keras.layers import ReLU, LeakyReLU, ZeroPadding2D
 from keras_contrib.layers import InstanceNormalization
 

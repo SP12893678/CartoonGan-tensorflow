@@ -15,6 +15,7 @@ RUN pip install imageio
 RUN pip install tqdm
 
 COPY --from=builder /project /project
-ENTRYPOINT ["cd", "/project", "&&", "tensorboard", "--logdir", "runs", "--port=6007", "--bind_all"]
+WORKDIR /project
+ENTRYPOINT ["tensorboard", "--logdir", "runs", "--port=6007", "--bind_all"]
 EXPOSE 6007
 # ENTRYPOINT ["tail","-f","/dev/null"]
